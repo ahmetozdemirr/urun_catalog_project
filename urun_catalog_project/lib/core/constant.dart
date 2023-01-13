@@ -1,0 +1,14 @@
+const String loginTitle = "Login to your account";
+const String welcomeText = "Welcome";
+const String backText = "back!";
+const String emailText = "E-mail";
+const String nameText = "Name";
+const String passwordText = "Password";
+const String rememberText = "Remember Me";
+const String registerText = "Register";
+const String loginText = "Login";
+const String registerTitle = "Register an account";
+const String catalogText = "Catalog";
+const String bookDetails = "Book Details";
+const String summaryText = "Summary";
+const String buyText = "Buy Now";
