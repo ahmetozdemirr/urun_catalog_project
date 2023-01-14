@@ -12,3 +12,4 @@ const String catalogText = "Catalog";
 const String bookDetails = "Book Details";
 const String summaryText = "Summary";
 const String buyText = "Buy Now";
+const String baseurl = "https://assign-api.piton.com.tr/api/rest/";
