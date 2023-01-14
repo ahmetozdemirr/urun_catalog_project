@@ -1,32 +1,18 @@
-import 'package:dio/dio.dart';
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:urun_catalog_project/core/constant.dart';
-import 'package:urun_catalog_project/feature/pages/home/viewmodel/category_cubit.dart';
 import 'package:urun_catalog_project/feature/shared/text_style.dart';
 import 'package:urun_catalog_project/feature/shared/ui_helper.dart';
+import 'package:urun_catalog_project/feature/shared/widget/search/searchWidget.dart';
 import 'package:urun_catalog_project/feature/shared/widget/text/subtitle.dart';
 import 'package:urun_catalog_project/feature/shared/widget/text/title.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:urun_catalog_project/model/category_models.dart';
-import 'package:urun_catalog_project/service/categoryservice/category_service.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CategoryCubit(
-          service: CategoryService(Dio(BaseOptions(baseUrl: baseurl)))),
-      child: BlocConsumer<CategoryCubit, CategoryState>(
-          builder: (context, state) {
-            return buildScaffold(context, state);
-          },
-          listener: (context, state) {}),
-    );
-  }
-
-  Scaffold buildScaffold(BuildContext context, CategoryState state) {
     return Scaffold(
       appBar: AppBar(
         leading: Container(
@@ -45,18 +31,34 @@ class HomePage extends StatelessWidget {
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         children: [
-          categoriesWidget(context),
+          categoriesWidget(),
           SizedBox(
             height: 20,
           ),
-          _searchTextField()
+          searchTextField(),
+          ListView.builder(
+              physics: ClampingScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: categories.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TitleText(categories[index].toString()),
+                        SubTitleText("viewall"),
+                      ],
+                    ),
+                  ],
+                );
+              }),
         ],
       ),
     );
   }
 }
 
-/*
 List categories = [
   "All",
   "Best Seller",
@@ -64,8 +66,8 @@ List categories = [
   "Children",
   "Philosophy",
   "hello"
-];*/
-Widget categoriesWidget(BuildContext context) {
+];
+Widget categoriesWidget() {
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
     child: Row(
@@ -73,7 +75,7 @@ Widget categoriesWidget(BuildContext context) {
         SizedBox(height: 16),
         Wrap(
           spacing: 10,
-          children: context.read<CategoryModel>().category!.map(
+          children: categories.map(
             (category) {
               return Container(
                 padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
@@ -82,30 +84,12 @@ Widget categoriesWidget(BuildContext context) {
                 decoration: BoxDecoration(
                     color: UIHelper.decorationColor,
                     borderRadius: BorderRadius.circular(4)),
-                child: Center(child: SubTitleText(category.name.toString())),
+                child: Center(child: SubTitleText(category)),
               );
             },
           ).toList(),
         )
       ],
     ),
-  );
-}
-
-TextFormField _searchTextField() {
-  return TextFormField(
-    keyboardType: TextInputType.emailAddress,
-
-    //autovalidateMode: AutovalidateMode.onUserInteraction,
-    decoration: InputDecoration(
-        prefixIcon: Icon(Icons.search),
-        suffixIcon: Icon(Icons.format_list_bulleted_sharp),
-        iconColor: UIHelper.hintTextColor,
-        hintText: "Search",
-        hintStyle: mailTextInputHintTextStyle,
-        filled: true,
-        fillColor: UIHelper.decorationColor,
-        enabledBorder: textInputDecoration,
-        border: textInputDecoration),
   );
 }
